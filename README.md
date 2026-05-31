@@ -52,7 +52,7 @@ Un utilisateur qui connecte son wallet MetaMask et contribue à la campagne.
 
 Le contrat principal sera :
 
-````txt
+```txt
 Crowdfunding.sol
 
 ## Technologies utilisées
@@ -77,13 +77,16 @@ crowdfunding-on-chain/
 │   ├── style.css
 │   └── app.js
 └── README.md
-````
+```
 
 ## Déploiements Sepolia
 
 Le smart contract `Crowdfunding.sol` a été déployé sur le réseau Sepolia pour démontrer deux scénarios.
 
 ### Scénario 1 : campagne réussie
+
+Ce scénario montre une campagne dont l’objectif a été atteint.  
+Après la deadline, le propriétaire peut appeler `withdrawFunds()` pour retirer les fonds.
 
 - Network: Sepolia Testnet
 - Contract address: `0x3F0AEa9d6069Fa721Ed0446814cc3d88c21F5d7F`
@@ -92,7 +95,12 @@ Le smart contract `Crowdfunding.sol` a été déployé sur le réseau Sepolia po
 - Durée: `1 minute`
 - Fonction testée: `withdrawFunds()`
 
+![Etherscan campagne réussie](./screenshots/Etherscan%20campagne%20réussie.png)
+
 ### Scénario 2 : campagne échouée
+
+Ce scénario montre une campagne dont l’objectif n’a pas été atteint.  
+Après la deadline, le contributeur peut appeler `refund()` pour récupérer sa contribution.
 
 - Network: Sepolia Testnet
 - Contract address: `0x3E964a626Ef36D92537db7Dd9bC6b4891D6267cA`
@@ -100,6 +108,8 @@ Le smart contract `Crowdfunding.sol` a été déployé sur le réseau Sepolia po
 - Objectif: `10000000000000000 wei` soit `0.01 SepoliaETH`
 - Durée: `1 minute`
 - Fonction testée: `refund()`
+
+![Etherscan campagne échouée](./screenshots/Etherscan%20campagne%20échouée.png)
 
 ## Choix d’architecture
 
