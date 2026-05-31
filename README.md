@@ -123,3 +123,109 @@ Pour la démonstration, deux instances du même contrat ont été déployées su
 Dans cette version, chaque contrat déployé représente une seule campagne de crowdfunding. Pour créer une nouvelle campagne, il faut déployer une nouvelle instance du contrat avec un nouvel objectif et une nouvelle durée.
 
 Ce choix rend le projet plus simple, plus lisible et adapté à une démonstration courte.
+
+## Interface frontend
+
+Le projet contient une interface web simple permettant d’interagir avec le smart contract `Crowdfunding.sol`.
+
+L’interface permet de :
+
+- connecter MetaMask ;
+- vérifier que le réseau utilisé est Sepolia ;
+- afficher l’adresse du wallet connecté ;
+- afficher les informations de la campagne ;
+- contribuer en SepoliaETH ;
+- retirer les fonds si la campagne est réussie ;
+- demander un remboursement si la campagne a échoué ;
+- afficher les messages d’erreur retournés par le smart contract.
+
+## Lancer le frontend
+
+Ouvrir le projet dans VS Code, puis lancer le fichier :
+
+```txt
+frontend/index.html
+```
+
+avec l’extension **Live Server**.
+
+L’URL locale utilisée pendant les tests est :
+
+```txt
+http://127.0.0.1:5500/frontend/index.html
+```
+
+## Contrat utilisé par le frontend
+
+- Network: Sepolia Testnet
+- Contract address: `0xd4Dba1a3708C2DB98524373BE2a17151A759eE25`
+- Etherscan: `https://sepolia.etherscan.io/address/0xd4Dba1a3708C2DB98524373BE2a17151A759eE25`
+
+Ce contrat est utilisé pour tester les interactions depuis l’interface web.
+
+## Tests réalisés depuis le frontend
+
+### Connexion MetaMask
+
+L’utilisateur clique sur le bouton `Connecter MetaMask`.
+
+Résultat obtenu :
+
+- MetaMask s’ouvre ;
+- le wallet est connecté ;
+- l’adresse du compte est affichée ;
+- le réseau Sepolia est détecté.
+
+### Lecture des informations de campagne
+
+Le frontend lit les informations depuis le smart contract avec `getCampaignInfo()`.
+
+Informations affichées :
+
+- propriétaire ;
+- objectif ;
+- montant collecté ;
+- solde du contrat ;
+- deadline ;
+- état de la campagne.
+
+### Contribution
+
+L’utilisateur saisit un montant en SepoliaETH, puis clique sur `Contribuer`.
+
+Résultat obtenu :
+
+- MetaMask demande une confirmation ;
+- la transaction est envoyée sur Sepolia ;
+- après confirmation, le montant collecté est mis à jour dans l’interface.
+
+### Retrait des fonds
+
+Le bouton `Retirer les fonds` appelle la fonction `withdrawFunds()`.
+
+Cette action réussit uniquement si :
+
+- l’utilisateur est le propriétaire du contrat ;
+- la campagne est terminée ;
+- l’objectif est atteint ;
+- les fonds n’ont pas déjà été retirés.
+
+### Remboursement
+
+Le bouton `Demander remboursement` appelle la fonction `refund()`.
+
+Cette action réussit uniquement si :
+
+- la campagne est terminée ;
+- l’objectif n’est pas atteint ;
+- l’utilisateur a déjà contribué.
+
+### Gestion des erreurs
+
+Le frontend récupère les messages d’erreur retournés par le smart contract.
+
+Exemple de message affiché :
+
+```txt
+L'objectif de collecte n'est pas atteint
+```
