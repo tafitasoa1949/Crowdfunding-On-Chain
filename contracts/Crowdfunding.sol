@@ -3,16 +3,17 @@ pragma solidity ^0.8.20;
 
 /**
  * @title Crowdfunding
- * @dev Première version d'un smart contract de financement participatif on-chain.
+ * @dev Smart contract de financement participatif on-chain.
  *
- * Ce contrat permet aux utilisateurs de contribuer en ETH à une campagne.
- * La campagne possède un propriétaire, un objectif de collecte et une date limite.
+ * Ce contrat permet aux utilisateurs de contribuer en ETH a une campagne.
+ * La campagne possede un proprietaire, un objectif de collecte et une date limite.
  */
 contract Crowdfunding {
     address public owner;
     uint256 public goal;
     uint256 public deadline;
     uint256 public totalRaised;
+    bool public fundsWithdrawn;
 
     mapping(address => uint256) public contributions;
 
@@ -22,8 +23,13 @@ contract Crowdfunding {
         uint256 totalRaised
     );
 
+    event FundsWithdrawn(
+        address indexed owner,
+        uint256 amount
+    );
+
     /**
-     * @dev Limite l'accès uniquement au propriétaire de la campagne.
+     * @dev Limite l'acces uniquement au proprietaire de la campagne.
      */
     modifier onlyOwner() {
         require(msg.sender == owner, "Seul le proprietaire peut appeler cette fonction");
@@ -43,6 +49,7 @@ contract Crowdfunding {
         goal = _goal;
         deadline = block.timestamp + (_durationInMinutes * 1 minutes);
         totalRaised = 0;
+        fundsWithdrawn = false;
     }
 
     /**
@@ -56,6 +63,24 @@ contract Crowdfunding {
         totalRaised += msg.value;
 
         emit ContributionReceived(msg.sender, msg.value, totalRaised);
+    }
+
+    /**
+     * @dev Permet au proprietaire de retirer les fonds si la campagne a reussi.
+     */
+    function withdrawFunds() external onlyOwner {
+        require(block.timestamp >= deadline, "La campagne n'est pas encore terminee");
+        require(totalRaised >= goal, "L'objectif de collecte n'est pas atteint");
+        require(!fundsWithdrawn, "Les fonds ont deja ete retires");
+
+        fundsWithdrawn = true;
+
+        uint256 amount = address(this).balance;
+
+        (bool success, ) = payable(owner).call{value: amount}("");
+        require(success, "Le retrait des fonds a echoue");
+
+        emit FundsWithdrawn(owner, amount);
     }
 
     /**
@@ -78,7 +103,9 @@ contract Crowdfunding {
             uint256 campaignDeadline,
             uint256 campaignTotalRaised,
             bool campaignFinished,
-            bool goalReached
+            bool goalReached,
+            bool campaignFundsWithdrawn,
+            uint256 contractBalance
         )
     {
         return (
@@ -87,7 +114,9 @@ contract Crowdfunding {
             deadline,
             totalRaised,
             block.timestamp >= deadline,
-            totalRaised >= goal
+            totalRaised >= goal,
+            fundsWithdrawn,
+            address(this).balance
         );
     }
 }
