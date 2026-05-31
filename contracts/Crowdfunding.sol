@@ -28,6 +28,11 @@ contract Crowdfunding {
         uint256 amount
     );
 
+    event Refunded(
+        address indexed contributor,
+        uint256 amount
+    );
+
     /**
      * @dev Limite l'acces uniquement au proprietaire de la campagne.
      */
@@ -81,6 +86,25 @@ contract Crowdfunding {
         require(success, "Le retrait des fonds a echoue");
 
         emit FundsWithdrawn(owner, amount);
+    }
+
+    /**
+     * @dev Permet a un contributeur d'etre rembourse si la campagne a echoue.
+     */
+    function refund() external {
+        require(block.timestamp >= deadline, "La campagne n'est pas encore terminee");
+        require(totalRaised < goal, "L'objectif est atteint, remboursement impossible");
+
+        uint256 amount = contributions[msg.sender];
+        require(amount > 0, "Aucune contribution a rembourser");
+
+        contributions[msg.sender] = 0;
+        totalRaised -= amount;
+
+        (bool success, ) = payable(msg.sender).call{value: amount}("");
+        require(success, "Le remboursement a echoue");
+
+        emit Refunded(msg.sender, amount);
     }
 
     /**
