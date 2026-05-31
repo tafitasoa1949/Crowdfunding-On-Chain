@@ -11,7 +11,7 @@ const CONTRACTS = {
   },
 };
 
-const CONTRACT_ADDRESS = CONTRACTS.success.address;
+const CONTRACT_ADDRESS = "0xd4Dba1a3708C2DB98524373BE2a17151A759eE25";
 
 const CONTRACT_ABI = [
   "function owner() view returns (address)",
