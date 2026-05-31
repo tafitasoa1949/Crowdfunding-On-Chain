@@ -48,7 +48,15 @@ Le propriétaire de la campagne. Il déploie le contrat et peut retirer les fond
 
 Un utilisateur qui connecte son wallet MetaMask et contribue à la campagne.
 
-## Smart contract prévu
+## Choix d’architecture
+
+Dans cette version, chaque contrat déployé représente une seule campagne de crowdfunding.
+
+Pour créer une nouvelle campagne, il faut déployer une nouvelle instance du contrat avec un nouvel objectif et une nouvelle durée.
+
+Ce choix rend le projet plus simple, plus lisible et plus adapté à une démonstration courte.
+
+## Smart contract
 
 Le contrat principal sera :
 
@@ -78,3 +86,38 @@ crowdfunding-on-chain/
 │   └── app.js
 └── README.md
 ````
+
+## Déploiements Sepolia
+
+Le smart contract `Crowdfunding.sol` a été déployé sur le réseau Sepolia pour démontrer deux scénarios.
+
+### Scénario 1 : campagne réussie
+
+- Network: Sepolia Testnet
+- Contract address: `0x3F0AEa9d6069Fa721Ed0446814cc3d88c21F5d7F`
+- Etherscan: `https://sepolia.etherscan.io/address/0x3F0AEa9d6069Fa721Ed0446814cc3d88c21F5d7F`
+- Objectif: `1000000000000000 wei` soit `0.001 SepoliaETH`
+- Durée: `1 minute`
+- Fonction testée: `withdrawFunds()`
+
+### Scénario 2 : campagne échouée
+
+- Network: Sepolia Testnet
+- Contract address: `0x3E964a626Ef36D92537db7Dd9bC6b4891D6267cA`
+- Etherscan: `https://sepolia.etherscan.io/address/0x3E964a626Ef36D92537db7Dd9bC6b4891D6267cA`
+- Objectif: `10000000000000000 wei` soit `0.01 SepoliaETH`
+- Durée: `1 minute`
+- Fonction testée: `refund()`
+
+## Choix d’architecture
+
+Le projet contient un seul smart contract : `Crowdfunding.sol`.
+
+Pour la démonstration, deux instances du même contrat ont été déployées sur Sepolia :
+
+- une instance pour démontrer le scénario de réussite ;
+- une instance pour démontrer le scénario d’échec et de remboursement.
+
+Dans cette version, chaque contrat déployé représente une seule campagne de crowdfunding. Pour créer une nouvelle campagne, il faut déployer une nouvelle instance du contrat avec un nouvel objectif et une nouvelle durée.
+
+Ce choix rend le projet plus simple, plus lisible et adapté à une démonstration courte.
