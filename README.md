@@ -48,14 +48,6 @@ Le propriétaire de la campagne. Il déploie le contrat et peut retirer les fond
 
 Un utilisateur qui connecte son wallet MetaMask et contribue à la campagne.
 
-## Choix d’architecture
-
-Dans cette version, chaque contrat déployé représente une seule campagne de crowdfunding.
-
-Pour créer une nouvelle campagne, il faut déployer une nouvelle instance du contrat avec un nouvel objectif et une nouvelle durée.
-
-Ce choix rend le projet plus simple, plus lisible et plus adapté à une démonstration courte.
-
 ## Smart contract
 
 Le contrat principal sera :
