@@ -298,3 +298,22 @@ code {
     text-align: left;
   }
 }
+
+/*  */
+
+.message-success {
+  border-color: #16a34a;
+  color: #bbf7d0;
+  background: rgba(22, 163, 74, 0.12);
+}
+
+.message-error {
+  border-color: #ef4444;
+  color: #fecaca;
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.message-info {
+  border-color: #334155;
+  color: #cbd5e1;
+}

@@ -1,164 +1,150 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Crowdfunding On-Chain</title>
 
     <link rel="stylesheet" href="./style.css" />
-  </head>
+</head>
 
-  <body>
+<body>
     <header class="hero">
-      <div class="container hero-content">
-        <div>
-          <p class="badge">Mini-projet Blockchain</p>
-          <h1>Crowdfunding On-Chain</h1>
-          <p class="hero-description">
-            Une application de financement participatif décentralisé sur
-            Ethereum Sepolia. Les contributions, retraits et remboursements sont
-            gérés par un smart contract Solidity.
-          </p>
-        </div>
+        <div class="container hero-content">
+            <div>
+                <p class="badge">Mini-projet Blockchain</p>
+                <h1>Crowdfunding On-Chain</h1>
+                <p class="hero-description">
+                    Une application de financement participatif décentralisé sur Ethereum Sepolia. Les contributions, retraits et remboursements sont gérés par un smart contract Solidity.
+                </p>
+            </div>
 
-        <button id="connectWalletBtn" class="btn btn-primary">
+            <button id="connectWalletBtn" class="btn btn-primary">
           Connecter MetaMask
         </button>
-      </div>
+        </div>
     </header>
 
     <main class="container">
-      <section class="wallet-card">
-        <h2>Wallet connecté</h2>
-        <p id="walletAddress" class="wallet-address">Aucun wallet connecté</p>
-        <p id="networkStatus" class="network-status">Réseau non vérifié</p>
-      </section>
+        <section class="wallet-card">
+            <h2>Wallet connecté</h2>
+            <p id="walletAddress" class="wallet-address">Aucun wallet connecté</p>
+            <p id="networkStatus" class="network-status">Réseau non vérifié</p>
+        </section>
 
-      <section class="grid">
-        <article class="card">
-          <h2>Informations de la campagne</h2>
+        <section class="grid">
+            <article class="card">
+                <h2>Informations de la campagne</h2>
 
-          <div class="info-list">
-            <div class="info-row">
-              <span>Propriétaire</span>
-              <strong id="campaignOwner">-</strong>
-            </div>
+                <div class="info-list">
+                    <div class="info-row">
+                        <span>Propriétaire</span>
+                        <strong id="campaignOwner">-</strong>
+                    </div>
 
-            <div class="info-row">
-              <span>Objectif</span>
-              <strong id="campaignGoal">-</strong>
-            </div>
+                    <div class="info-row">
+                        <span>Objectif</span>
+                        <strong id="campaignGoal">-</strong>
+                    </div>
 
-            <div class="info-row">
-              <span>Montant collecté</span>
-              <strong id="totalRaised">-</strong>
-            </div>
+                    <div class="info-row">
+                        <span>Montant collecté</span>
+                        <strong id="totalRaised">-</strong>
+                    </div>
 
-            <div class="info-row">
-              <span>Solde du contrat</span>
-              <strong id="contractBalance">-</strong>
-            </div>
+                    <div class="info-row">
+                        <span>Solde du contrat</span>
+                        <strong id="contractBalance">-</strong>
+                    </div>
 
-            <div class="info-row">
-              <span>Deadline</span>
-              <strong id="campaignDeadline">-</strong>
-            </div>
+                    <div class="info-row">
+                        <span>Deadline</span>
+                        <strong id="campaignDeadline">-</strong>
+                    </div>
 
-            <div class="info-row">
-              <span>État</span>
-              <strong id="campaignStatus">-</strong>
-            </div>
-          </div>
+                    <div class="info-row">
+                        <span>État</span>
+                        <strong id="campaignStatus">-</strong>
+                    </div>
+                </div>
 
-          <button id="refreshBtn" class="btn btn-secondary">
+                <button id="refreshBtn" class="btn btn-secondary">
             Actualiser les informations
           </button>
-        </article>
+            </article>
 
-        <article class="card">
-          <h2>Participer à la campagne</h2>
+            <article class="card">
+                <h2>Participer à la campagne</h2>
 
-          <label for="contributionAmount">Montant en SepoliaETH</label>
-          <input
-            type="number"
-            id="contributionAmount"
-            placeholder="Ex: 0.001"
-            step="0.001"
-            min="0"
-          />
+                <label for="contributionAmount">Montant en SepoliaETH</label>
+                <input type="number" id="contributionAmount" placeholder="Ex: 0.001" step="0.001" min="0" />
 
-          <button id="contributeBtn" class="btn btn-primary full-width">
+                <button id="contributeBtn" class="btn btn-primary full-width">
             Contribuer
           </button>
 
-          <div class="actions">
-            <button id="withdrawBtn" class="btn btn-success">
+                <div class="actions">
+                    <button id="withdrawBtn" class="btn btn-success">
               Retirer les fonds
             </button>
 
-            <button id="refundBtn" class="btn btn-warning">
+                    <button id="refundBtn" class="btn btn-warning">
               Demander remboursement
             </button>
-          </div>
+                </div>
 
-          <p class="hint">
-            Le retrait est réservé au propriétaire si l’objectif est atteint. Le
-            remboursement est possible si la campagne échoue.
-          </p>
-        </article>
-      </section>
+                <p class="hint">
+                    Le retrait est réservé au propriétaire si l’objectif est atteint. Le remboursement est possible si la campagne échoue.
+                </p>
+            </article>
+        </section>
 
-      <section class="card">
-        <h2>Messages</h2>
-        <div id="messageBox" class="message-box">
-          En attente d’une action utilisateur...
-        </div>
-      </section>
+        <section class="card">
+            <h2>Messages</h2>
+            <div id="messageBox" class="message-box">
+                En attente d’une action utilisateur...
+            </div>
+        </section>
 
-      <section class="card">
-        <h2>Contrats déployés sur Sepolia</h2>
+        <section class="card">
+            <h2>Contrats déployés sur Sepolia</h2>
 
-        <div class="deployment-list">
-          <div class="deployment-item">
-            <h3>Scénario 1 : campagne réussie</h3>
-            <p>
-              Fonction testée :
-              <code>withdrawFunds()</code>
-            </p>
-            <a
-              href="https://sepolia.etherscan.io/address/0x3F0AEa9d6069Fa721Ed0446814cc3d88c21F5d7F"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <div class="deployment-list">
+                <div class="deployment-item">
+                    <h3>Scénario 1 : campagne réussie</h3>
+                    <p>
+                        Fonction testée :
+                        <code>withdrawFunds()</code>
+                    </p>
+                    <a href="https://sepolia.etherscan.io/address/0x3F0AEa9d6069Fa721Ed0446814cc3d88c21F5d7F" target="_blank" rel="noopener noreferrer">
               Voir le contrat sur Etherscan
             </a>
-          </div>
+                </div>
 
-          <div class="deployment-item">
-            <h3>Scénario 2 : campagne échouée</h3>
-            <p>
-              Fonction testée :
-              <code>refund()</code>
-            </p>
-            <a
-              href="https://sepolia.etherscan.io/address/0x3E964a626Ef36D92537db7Dd9bC6b4891D6267cA"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+                <div class="deployment-item">
+                    <h3>Scénario 2 : campagne échouée</h3>
+                    <p>
+                        Fonction testée :
+                        <code>refund()</code>
+                    </p>
+                    <a href="https://sepolia.etherscan.io/address/0x3E964a626Ef36D92537db7Dd9bC6b4891D6267cA" target="_blank" rel="noopener noreferrer">
               Voir le contrat sur Etherscan
             </a>
-          </div>
-        </div>
-      </section>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer class="footer">
-      <p>
-        Projet réalisé avec Solidity, MetaMask, Sepolia, Etherscan et ethers.js.
-      </p>
+        <p>
+            Projet réalisé avec Solidity, MetaMask, Sepolia, Etherscan et ethers.js.
+        </p>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
     <script src="./app.js"></script>
-  </body>
+</body>
+
 </html>
