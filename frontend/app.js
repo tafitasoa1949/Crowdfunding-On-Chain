@@ -9,9 +9,13 @@ const CONTRACTS = {
     label: "Scénario 2 : campagne échouée",
     address: "0x3E964a626Ef36D92537db7Dd9bC6b4891D6267cA",
   },
+  frontend: {
+    label: "Contrat utilisé par le frontend",
+    address: "0xd4Dba1a3708C2DB98524373BE2a17151A759eE25",
+  },
 };
 
-const CONTRACT_ADDRESS = "0xd4Dba1a3708C2DB98524373BE2a17151A759eE25";
+const CONTRACT_ADDRESS = CONTRACTS.frontend.address;
 
 const CONTRACT_ABI = [
   "function owner() view returns (address)",
@@ -49,6 +53,11 @@ const campaignStatus = document.getElementById("campaignStatus");
 
 const messageBox = document.getElementById("messageBox");
 
+const contributionAmount = document.getElementById("contributionAmount");
+const contributeBtn = document.getElementById("contributeBtn");
+const withdrawBtn = document.getElementById("withdrawBtn");
+const refundBtn = document.getElementById("refundBtn");
+
 function showMessage(message, type = "info") {
   messageBox.textContent = message;
 
@@ -65,6 +74,35 @@ function showMessage(message, type = "info") {
   } else {
     messageBox.classList.add("message-info");
   }
+}
+
+function getErrorMessage(error) {
+  if (error.reason) {
+    return error.reason;
+  }
+
+  if (error.revert.args && error.revert.args.length > 0) {
+    return error.revert.args[0];
+  }
+
+  if (error.shortMessage) {
+    return error.shortMessage;
+  }
+
+  if (error.info.error.message) {
+    return error.info.error.message;
+  }
+
+  if (error.message) {
+    const match = error.message.match(/reverted with reason string '(.+?)'/);
+    if (match && match[1]) {
+      return match[1];
+    }
+
+    return error.message;
+  }
+
+  return "Erreur inconnue.";
 }
 
 function shortenAddress(address) {
@@ -178,6 +216,101 @@ async function loadCampaignInfo() {
   }
 }
 
+async function contribute() {
+  try {
+    if (!contract) {
+      showMessage("Connecte d'abord MetaMask.", "error");
+      return;
+    }
+
+    const amount = contributionAmount.value;
+
+    if (!amount || Number(amount) <= 0) {
+      showMessage("Entre un montant valide en SepoliaETH.", "error");
+      return;
+    }
+
+    showMessage("Transaction de contribution en cours...", "info");
+
+    const tx = await contract.contribute({
+      value: ethers.parseEther(amount),
+    });
+
+    showMessage("Transaction envoyee. Attente de confirmation...", "info");
+
+    await tx.wait();
+
+    showMessage("Contribution confirmee avec succes.", "success");
+    contributionAmount.value = "";
+
+    await loadCampaignInfo();
+  } catch (error) {
+    console.error(error);
+    showMessage(
+      `Erreur pendant la contribution : ${getErrorMessage(error)}`,
+      "error"
+    );
+  }
+}
+
+async function withdrawFunds() {
+  try {
+    if (!contract) {
+      showMessage("Connecte d'abord MetaMask.", "error");
+      return;
+    }
+
+    showMessage("Transaction de retrait en cours...", "info");
+
+    const tx = await contract.withdrawFunds();
+
+    showMessage("Transaction envoyee. Attente de confirmation...", "info");
+
+    await tx.wait();
+
+    showMessage("Retrait des fonds confirme avec succes.", "success");
+
+    await loadCampaignInfo();
+  } catch (error) {
+    console.error(error);
+    showMessage(
+      `Erreur pendant le remboursement : ${getErrorMessage(error)}`,
+      "error"
+    );
+  }
+}
+
+async function refund() {
+  try {
+    if (!contract) {
+      showMessage("Connecte d'abord MetaMask.", "error");
+      return;
+    }
+
+    showMessage("Transaction de remboursement en cours...", "info");
+
+    const tx = await contract.refund();
+
+    showMessage("Transaction envoyee. Attente de confirmation...", "info");
+
+    await tx.wait();
+
+    showMessage("Remboursement confirme avec succes.", "success");
+
+    await loadCampaignInfo();
+  } catch (error) {
+    console.error(error);
+    showMessage(
+      `Erreur pendant le remboursement : ${getErrorMessage(error)}`,
+      "error"
+    );
+    //    showMessage(
+    //        "Erreur pendant le remboursement. La campagne doit etre terminee et l'objectif non atteint.",
+    //        "error"
+    //    );
+  }
+}
+
 if (connectWalletBtn) {
   connectWalletBtn.addEventListener("click", connectWallet);
 }
@@ -194,4 +327,16 @@ if (window.ethereum) {
   window.ethereum.on("chainChanged", () => {
     window.location.reload();
   });
+}
+
+if (contributeBtn) {
+  contributeBtn.addEventListener("click", contribute);
+}
+
+if (withdrawBtn) {
+  withdrawBtn.addEventListener("click", withdrawFunds);
+}
+
+if (refundBtn) {
+  refundBtn.addEventListener("click", refund);
 }
