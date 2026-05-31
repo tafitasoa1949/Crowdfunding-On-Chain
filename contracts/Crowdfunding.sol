@@ -33,19 +33,11 @@ contract Crowdfunding {
         uint256 amount
     );
 
-    /**
-     * @dev Limite l'acces uniquement au proprietaire de la campagne.
-     */
     modifier onlyOwner() {
         require(msg.sender == owner, "Seul le proprietaire peut appeler cette fonction");
         _;
     }
 
-    /**
-     * @dev Initialise la campagne de financement participatif.
-     * @param _goal Objectif de collecte en wei.
-     * @param _durationInMinutes Duree de la campagne en minutes.
-     */
     constructor(uint256 _goal, uint256 _durationInMinutes) {
         require(_goal > 0, "L'objectif doit etre superieur a zero");
         require(_durationInMinutes > 0, "La duree doit etre superieure a zero");
@@ -109,10 +101,34 @@ contract Crowdfunding {
 
     /**
      * @dev Retourne le montant contribue par une adresse specifique.
-     * @param _contributor Adresse du contributeur a verifier.
      */
     function getContribution(address _contributor) external view returns (uint256) {
         return contributions[_contributor];
+    }
+
+    /**
+     * @dev Retourne le temps restant avant la fin de la campagne.
+     */
+    function getTimeLeft() external view returns (uint256) {
+        if (block.timestamp >= deadline) {
+            return 0;
+        }
+
+        return deadline - block.timestamp;
+    }
+
+    /**
+     * @dev Retourne true si la campagne est terminee et que l'objectif est atteint.
+     */
+    function isCampaignSuccessful() public view returns (bool) {
+        return block.timestamp >= deadline && totalRaised >= goal;
+    }
+
+    /**
+     * @dev Retourne true si la campagne est terminee et que l'objectif n'est pas atteint.
+     */
+    function isCampaignFailed() public view returns (bool) {
+        return block.timestamp >= deadline && totalRaised < goal;
     }
 
     /**
@@ -142,5 +158,20 @@ contract Crowdfunding {
             fundsWithdrawn,
             address(this).balance
         );
+    }
+
+    /**
+     * @dev Bloque les transferts directs vers le contrat.
+     * Les utilisateurs doivent utiliser contribute().
+     */
+    receive() external payable {
+        revert("Utilisez la fonction contribute");
+    }
+
+    /**
+     * @dev Bloque les appels inconnus.
+     */
+    fallback() external payable {
+        revert("Fonction inexistante");
     }
 }
