@@ -229,3 +229,20 @@ Exemple de message affiché :
 ```txt
 L'objectif de collecte n'est pas atteint
 ```
+
+## Fonctionnalités réalisées
+
+- Smart contract Solidity de crowdfunding
+- Déploiement sur Sepolia Testnet
+- Contribution en SepoliaETH
+- Retrait des fonds par le propriétaire si l’objectif est atteint
+- Remboursement des contributeurs si l’objectif n’est pas atteint
+- Connexion MetaMask depuis le frontend
+- Lecture des informations de campagne depuis le smart contract
+- Exécution des transactions depuis l’interface web
+- Affichage des erreurs retournées par le smart contract
+- Vérification des transactions sur Etherscan
+
+## Capture de l’interface
+
+![Interface frontend](./screenshots/Frontend%20interface.png)
