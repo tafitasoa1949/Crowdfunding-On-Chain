@@ -55,7 +55,7 @@ Le contrat principal sera :
 ````txt
 Crowdfunding.sol
 
-## Technologies prévues
+## Technologies utilisées
 
 - Solidity
 - Remix IDE
@@ -69,7 +69,6 @@ Crowdfunding.sol
 
 ## Structure du projet
 
-```txt
 crowdfunding-on-chain/
 ├── contracts/
 │   └── Crowdfunding.sol
